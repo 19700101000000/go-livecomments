@@ -41,12 +41,16 @@ export default {
       window.setTimeout(this.newLive, 800)
     },
     newLive () {
-      axios.get('/api/newlive').then((r) => {
-        this.$router.puth({ path: `/live/${r.data.livekey}`})
-      }).catch(() => {
-        this.isError = true
-        this.isDisabled = false
-      })
+      axios
+        .get('/api/newlive')
+        .then(r => {
+          this.$router.push({ path: `/live/${r.data.livekey}`})
+        })
+        .catch(e => {
+          window.console.log(e)
+          this.isError = true
+          this.isDisabled = false
+        })
     }
   },
 }
