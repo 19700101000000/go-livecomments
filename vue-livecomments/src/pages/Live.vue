@@ -1,19 +1,21 @@
 <template>
   <div id="live-screen" class="h-100" :style="styles.liveScreen">
-    <!-- TODO: live-screen-menu to outer component -->
-    <div id="live-screen-menu" class="h-100 w-100" :style="styles.liveScreenMenu">
-      <b-button
-        variant="outline-danger"
-        size="lg" 
-        @click="onClickDummyComment">
-        Dummy Comment
-      </b-button>
-    </div>
+    <live-menu
+      :style="styles.liveScreenMenu"
+      @clickDummyComment="onClickDummyComment"></live-menu>
+    <timer></timer>
   </div>
 </template>
 
 <script>
+import LiveMenu from '@/components/LiveMenu.vue'
+import Timer from '@/components/Timer.vue'
+
 export default {
+  components: {
+    LiveMenu,
+    Timer,
+  },
   data () {
     return {
       comments: [/* {
@@ -23,13 +25,15 @@ export default {
       eventTimeout: {
         hideMenu: null,
       },
+      eventInterval: {
+        countTimer: null,
+      },
       styles: {
         liveScreen: {
-          backgroundColor: 'white'
+          backgroundColor: this.$store.state.bgColor,
         },
         liveScreenMenu: {
           display: 'none',
-          backgroundColor: 'rgba(0,0,0,0.2)',
           position: 'absolute',
           zIndex: '1'
         }
@@ -68,16 +72,25 @@ export default {
       /* add comment to screen */
       const screen = window.document.getElementById("live-screen")
       screen.appendChild(element)
-    }
-  },
-  mounted () {
-    window.document.onmousemove = (e) => {
+    },
+    onMouseMove(/* e MouseEvent */) {
       this.styles.liveScreenMenu.display = 'block'
       window.clearTimeout(this.eventTimeout.hideMenu)
       this.eventTimeout.hideMenu = window.setTimeout(() => {
         this.styles.liveScreenMenu.display = 'none'
       }, 2000)
-    }
+    },
+    countTimer() {
+      this.$store.commit('countTimer', 1000)
+      if (this.$store.state.timer === this.$store.state.count) {
+        window.clearInterval(this.eventInterval.countTimer)
+      }
+    },
+  },
+  mounted () {
+    window.document.onmousemove = this.onMouseMove
+
+    this.eventInterval.countTimer = window.setInterval(this.countTimer, 1000)
   }
 }
 </script>
@@ -89,5 +102,7 @@ export default {
 }
 .comment {
   white-space: nowrap;
+  position: absolute;
+  top: 10em;
 }
 </style>
