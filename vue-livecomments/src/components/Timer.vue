@@ -1,13 +1,8 @@
 <template>
-  <b-container class="h-100">
-    <b-row class="h-100 align-items-center">
-      <b-col sm="4" class="text-center mx-auto">
-        <b-card
-          :title="timer"
-          :sub-title="count + ''"></b-card>
-      </b-col>
-    </b-row>
-  </b-container>
+  <div>
+    <p class="timer mb-0">{{ timer }}</p>
+    <p class="count">{{ count }}</p>
+  </div>
 </template>
 
 <script>
@@ -42,3 +37,11 @@ export default {
   }
 }
 </script>
+
+<style scope>
+.timer {
+  font-size: 2em;
+}
+.count {
+}
+</style>

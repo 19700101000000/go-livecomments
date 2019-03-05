@@ -1,9 +1,15 @@
 <template>
   <div id="live-screen" class="h-100" :style="styles.liveScreen">
+    <b-container class="h-100">
+      <b-row class="h-100 align-items-center">
+        <b-col class="text-center mx-auto">
+          <timer class="display-1"></timer>
+        </b-col>
+      </b-row>
+    </b-container>
     <live-menu
       :style="styles.liveScreenMenu"
       @clickDummyComment="onClickDummyComment"></live-menu>
-    <timer></timer>
   </div>
 </template>
 
@@ -25,9 +31,6 @@ export default {
       eventTimeout: {
         hideMenu: null,
       },
-      eventInterval: {
-        countTimer: null,
-      },
       styles: {
         liveScreen: {
           backgroundColor: this.$store.state.bgColor,
@@ -35,15 +38,20 @@ export default {
         liveScreenMenu: {
           display: 'none',
           position: 'absolute',
-          zIndex: '1'
+          zIndex: '1',
+          top: '0',
         }
       }
     }
   },
   methods: {
+
+    /* Debug */
     onClickDummyComment () {
       this.addComment('1970-01-01 00:00:00', 'dummy comment')
     },
+
+    /* Show Comment */
     addComment(d, c/* datetime, comment string */) {
       const comment = {
         datetime: d,
@@ -73,6 +81,8 @@ export default {
       const screen = window.document.getElementById("live-screen")
       screen.appendChild(element)
     },
+
+    /* EventListener */
     onMouseMove(/* e MouseEvent */) {
       this.styles.liveScreenMenu.display = 'block'
       window.clearTimeout(this.eventTimeout.hideMenu)
@@ -80,17 +90,9 @@ export default {
         this.styles.liveScreenMenu.display = 'none'
       }, 2000)
     },
-    countTimer() {
-      this.$store.commit('countTimer', 1000)
-      if (this.$store.state.timer === this.$store.state.count) {
-        window.clearInterval(this.eventInterval.countTimer)
-      }
-    },
   },
   mounted () {
     window.document.onmousemove = this.onMouseMove
-
-    this.eventInterval.countTimer = window.setInterval(this.countTimer, 1000)
   }
 }
 </script>
