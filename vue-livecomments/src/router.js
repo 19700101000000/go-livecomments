@@ -9,6 +9,6 @@ Vue.use(VueRouter)
 export default new VueRouter ({
   routes: [
     { path: '/', component: Index },
-    { path: "/live/:id", component: Live },
+    { path: "/live", component: Live },
   ],
 })
