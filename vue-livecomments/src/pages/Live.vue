@@ -1,5 +1,9 @@
 <template>
-  <div id="live-screen" class="h-100" :style="styles.liveScreen">
+  <div
+    id="live-screen"
+    class="h-100"
+    :style="styles.liveScreen"
+    @mousemove="onMouseMove">
     <b-container class="h-100">
       <b-row class="h-100 align-items-center">
         <b-col class="text-center mx-auto">
@@ -106,9 +110,6 @@ export default {
       window.clearTimeout(this.eventTimeout.hideMenu)
     },
   },
-  mounted () {
-    window.document.onmousemove = this.onMouseMove
-  }
 }
 </script>
 
