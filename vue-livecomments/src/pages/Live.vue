@@ -9,7 +9,8 @@
     </b-container>
     <live-menu
       :style="styles.liveScreenMenu"
-      @clickDummyComment="onClickDummyComment"></live-menu>
+      @clickDummyComment="onClickDummyComment"
+      @autoHide="onChangeMenuAutoHide"></live-menu>
   </div>
 </template>
 
@@ -28,6 +29,7 @@ export default {
         datetime: 'yyyy-MM-dd HH:mm:ss',
         comment: 'this is comment',
       } */],
+      menuAutoHide: true,
       eventTimeout: {
         hideMenu: null,
       },
@@ -45,6 +47,14 @@ export default {
     }
   },
   methods: {
+    onChangeMenuAutoHide(isAutoHide) {
+      window.console.log(isAutoHide)
+      this.clearTimeout()
+      this.menuAutoHide = isAutoHide
+      if (this.menuAutoHide) {
+        this.onMouseMove()
+      }
+    },
 
     /* Debug */
     onClickDummyComment () {
@@ -85,10 +95,15 @@ export default {
     /* EventListener */
     onMouseMove(/* e MouseEvent */) {
       this.styles.liveScreenMenu.display = 'block'
+      this.clearTimeout()
+      if (this.menuAutoHide) {
+        this.eventTimeout.hideMenu = window.setTimeout(() => {
+          this.styles.liveScreenMenu.display = 'none'
+        }, 2000)
+      }
+    },
+    clearTimeout() {
       window.clearTimeout(this.eventTimeout.hideMenu)
-      this.eventTimeout.hideMenu = window.setTimeout(() => {
-        this.styles.liveScreenMenu.display = 'none'
-      }, 2000)
     },
   },
   mounted () {

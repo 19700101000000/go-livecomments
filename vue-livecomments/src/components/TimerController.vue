@@ -3,9 +3,9 @@
     <timer></timer>
 
     <b-row>
-      <b-col>
+      <b-col sm="2">
       </b-col>
-      <b-col>
+      <b-col sm="8">
         <b-button
           variant="outline-light"
           @click="onClickToggle">
@@ -23,7 +23,7 @@
           <font-awesome-icon icon="stop"></font-awesome-icon>
         </b-button>
       </b-col>
-      <b-col class="text-right">
+      <b-col sm="2" class="text-right">
         <b-button
           variant="outline-light"
           disabled>

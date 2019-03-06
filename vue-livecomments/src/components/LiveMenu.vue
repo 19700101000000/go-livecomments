@@ -1,6 +1,27 @@
 <template>
   <b-container id="live-screen-menu" class="h-100" fluid>
     <b-row class="h-25 pt-3">
+      <b-col>
+        <b-button
+          variant="outline-light"
+          v-b-modal.modal-qr>
+            <font-awesome-icon icon="qrcode"></font-awesome-icon>
+        </b-button>
+        <b-modal
+          id="modal-qr"
+          class="text-center"
+          @show="onFocusQR"
+          @hide="onBlurQR"
+          centered
+          hide-header
+          hide-footer>
+          <qrcode-vue
+            class="m-4"
+            value="https://19700101000000.com"
+            :size="400"></qrcode-vue>
+        </b-modal>
+      </b-col>
+
       <b-col class="text-right">
         <b-button
           variant="outline-light"
@@ -24,6 +45,7 @@
             <font-awesome-icon icon="cog"></font-awesome-icon>
         </b-button>
       </b-col>
+
       <b-col class="mx-auto text-right">
         <b-button
           variant="danger"
@@ -36,15 +58,30 @@
 </template>
 
 <script>
+import QrcodeVue from 'qrcode.vue'
 import TimerController from '@/components/TimerController.vue'
 
 export default {
   components: {
+    QrcodeVue,
     TimerController,
+  },
+  data () {
+    return {
+      autoHide: true,
+    }
   },
   methods: {
     onClickDummyComment () {
       this.$emit('clickDummyComment')
+    },
+    onFocusQR () {
+      this.autoHide = false
+      this.$emit('autoHide', this.autoHide)
+    },
+    onBlurQR () {
+      this.autoHide = true
+      this.$emit('autoHide', this.autoHide)
     },
   }
 }
