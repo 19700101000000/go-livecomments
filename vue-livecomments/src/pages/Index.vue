@@ -43,8 +43,9 @@ export default {
     newLive () {
       axios
         .get('/api/newlive')
-        .then(() => {
-          this.$router.push({ path: '/live/'})
+        .then(r => {
+          this.$store.commit('livekey', r.data.livekey)
+          this.$router.push({ path: '/live'})
         })
         .catch(e => {
           window.console.log(e)

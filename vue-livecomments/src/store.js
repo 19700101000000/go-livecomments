@@ -11,6 +11,7 @@ export default new Vuex.Store({
       count: 0,
       active: false,
     },
+    livekey: null/* *string */,
   },
   mutations: {
     setColor(state, c/*string*/) {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     stopTimer(state) {
       state.timer.active = false
       state.timer.count  = 0
+    },
+    livekey(state, key/*string*/) {
+      state.livekey = key
     },
   },
 })

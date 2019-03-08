@@ -17,7 +17,7 @@
           hide-footer>
           <qrcode-vue
             class="m-4"
-            value="https://19700101000000.com"
+            :value="qrValue"
             :size="400"></qrcode-vue>
         </b-modal>
       </b-col>
@@ -69,6 +69,7 @@ export default {
   data () {
     return {
       autoHide: true,
+      qrValue: `http://${window.location.host}/comment/${this.$store.state.livekey || ''}`,
     }
   },
   methods: {

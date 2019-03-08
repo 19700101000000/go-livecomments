@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import { w3cwebsocket } from 'websocket'
+
 export default {
   data () {
     return {
@@ -59,6 +61,7 @@ export default {
       isDisabled: false,
       isSending: false,
       isError: false,
+      socket: new w3cwebsocket(`ws://${window.location.host}/ws/${this.$route.params.id}`)
     }
   },
   computed: {
@@ -70,12 +73,21 @@ export default {
     onClickSend() {
       this.isDisabled = true
       this.isSending = true
+      this.socket.send(this.comment)
       window.setTimeout(() => {
         this.isDisabled = false
         this.isSending = false
         // this.isError = true
         this.comment = ''
       }, 1000)
+    }
+  },
+  created() {
+    this.socket.onerror = () => {
+      window.console.log('websocket error')
+    }
+    this.socket.onclose = () => {
+      window.console.log('websocket close')
     }
   },
 }

@@ -7,12 +7,19 @@ import (
 
 func main() {
 	r := gin.Default()
+	handle.InitWS()
 
+	/* web pages */
 	r.GET("/", handle.Index)
-	r.GET("/api/newlive", handle.NewLive)
-
+	r.GET("/live", handle.Index)
+	r.GET("/comment/:id", handle.Index)
 	r.Static("/js", "./assets/js")
 	r.Static("/css", "./assets/css")
+
+	/* json api */
+	r.GET("/api/newlive", handle.NewLive)
+	/* websocket */
+	r.GET("/ws/:key", handle.WS)
 
 	r.LoadHTMLFiles("./templates/index.html")
 	r.Run(":8080")

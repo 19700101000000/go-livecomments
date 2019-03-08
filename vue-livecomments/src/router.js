@@ -8,6 +8,7 @@ import Comment from './pages/Comment.vue'
 Vue.use(VueRouter)
 
 export default new VueRouter ({
+  mode: 'history',
   routes: [
     { path: '/', component: Index },
     { path: "/live", component: Live },

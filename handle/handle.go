@@ -1,6 +1,7 @@
 package handle
 
 import (
+	"github.com/19700101000000/go-livecomments/live"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -11,6 +12,6 @@ func Index(c *gin.Context) {
 
 func NewLive(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
-		"livekey": "New Live",
+		"livekey": live.NewLiveKey(),
 	})
 }

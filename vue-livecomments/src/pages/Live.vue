@@ -10,6 +10,13 @@
           <timer class="display-1"></timer>
         </b-col>
       </b-row>
+      <b-row class="h-100 mt-0 align-items-center">
+        <b-col class="text-center mx-auto">
+          <b-alert variant="danger" show>
+            Fail Connection
+          </b-alert>
+        </b-col>
+      </b-row>
     </b-container>
     <live-menu
       :style="styles.liveScreenMenu"
@@ -21,6 +28,7 @@
 <script>
 import LiveMenu from '@/components/LiveMenu.vue'
 import Timer from '@/components/Timer.vue'
+import { w3cwebsocket } from 'websocket'
 
 export default {
   components: {
@@ -47,7 +55,8 @@ export default {
           zIndex: '1',
           top: '0',
         }
-      }
+      },
+      socket: new w3cwebsocket(`ws://${window.location.host}/ws/${this.$store.state.livekey}`),
     }
   },
   methods: {
@@ -62,30 +71,26 @@ export default {
 
     /* Debug */
     onClickDummyComment () {
-      this.addComment('1970-01-01 00:00:00', 'dummy comment')
+      this.addComment({comment: 'Dummy Comment'})
+      // this.socket.send('Dummy Comment')
     },
 
     /* Show Comment */
-    addComment(d, c/* datetime, comment string */) {
-      const comment = {
-        datetime: d,
-        comment: c,
-      }
+    addComment(comment/* { datetime: string, comment: string } */) {
       this.comments.push(comment)
-
-      /* debug */
-      window.console.log(comment)
+      const time = new Date().getTime()
 
       /* create element */
-      const text = window.document.createTextNode(c)
+      const text = window.document.createTextNode(comment.comment)
       const element = window.document.createElement('p')
       element.className = 'comment'
       element.appendChild(text)
+      element.style.top = `${time % 80}%`
       element.animate([{
         marginLeft: '100%',
         widh: '100%',
       }, {
-        marginLeft: `-${c.length}em`,
+        marginLeft: `-${comment.comment.length}em`,
         widh: '100%',
       }], 4000).onfinish = () => {
         element.remove()
@@ -110,6 +115,20 @@ export default {
       window.clearTimeout(this.eventTimeout.hideMenu)
     },
   },
+  created () {
+    this.socket.onmessage = (e) => {
+      this.addComment(JSON.parse(e.data))
+    }
+    this.socket.onerror = () => {
+      window.console.log('websocket error')
+    }
+    this.socket.onclose = () => {
+      window.console.log('websocket close')
+    }
+  },
+  destroyed () {
+    this.socket.close()
+  }
 }
 </script>
 
@@ -121,6 +140,9 @@ export default {
 .comment {
   white-space: nowrap;
   position: absolute;
-  top: 10em;
+  font-size: 6em;
+  font-weight: bold;
+  -webkit-text-stroke-width: 4px;
+  -webkit-text-stroke-color: white;
 }
 </style>
