@@ -27,6 +27,9 @@
             <br>
             More then 800x600px.
           </b-card-text>
+          <b-card-text class="text-secondary">
+            Bata Version.
+          </b-card-text>
         </b-card>
       </b-col>
     </b-row>
