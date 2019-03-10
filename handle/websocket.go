@@ -14,9 +14,11 @@ type ResMsg struct {
 	Message string `json:"comment"`
 	Date    string `json:"datetime"`
 	Top     int64  `json:"top"`
+	Color   string `json:"color"`
 }
 type ReqMsg struct {
 	Message string `json:"comment"`
+	Color   string `json:"color"`
 }
 
 /* init Websocket Settings */
@@ -40,6 +42,7 @@ func InitWS() {
 			Message: req.Message,
 			Date:    now.Format("2006-01-02 15:04:05"),
 			Top:     now.UnixNano() % 80,
+			Color:   req.Color,
 		}
 		json, err := json.Marshal(&message)
 		if err != nil {

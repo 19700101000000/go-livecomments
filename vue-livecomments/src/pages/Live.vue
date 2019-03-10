@@ -2,7 +2,7 @@
   <div
     id="live-screen"
     class="h-100"
-    :style="styles.liveScreen"
+    :style="{backgroundColor: getBgColor, color: getColor}"
     @mousemove="onMouseMove">
     <b-container class="h-100" style="position: relative;">
       <b-row class="h-100 align-items-center">
@@ -22,7 +22,9 @@
       </b-row>
     </b-container>
     <live-menu
+      class="text-body"
       :style="styles.liveScreenMenu"
+      :comments="comments"
       @autoHide="onChangeMenuAutoHide"></live-menu>
   </div>
 </template>
@@ -42,6 +44,8 @@ export default {
       comments: [/* {
         datetime: 'yyyy-MM-dd HH:mm:ss',
         comment: 'this is comment',
+        top: 80,
+        color: 'inherit',
       } */],
       isError: false,
       menuAutoHide: true,
@@ -53,9 +57,6 @@ export default {
         sendPing: null,
       },
       styles: {
-        liveScreen: {
-          backgroundColor: this.$store.state.bgColor,
-        },
         liveScreenMenu: {
           display: 'none',
           position: 'absolute',
@@ -66,9 +67,16 @@ export default {
       socket: null,
     }
   },
+  computed: {
+    getBgColor () {
+      return this.$store.state.bgColor
+    },
+    getColor () {
+      return this.$store.state.color
+    },
+  },
   methods: {
     onChangeMenuAutoHide(isAutoHide) {
-      window.console.log(isAutoHide)
       this.clearTimeout()
       this.menuAutoHide = isAutoHide
       if (this.menuAutoHide) {
@@ -77,7 +85,7 @@ export default {
     },
 
     /* Show Comment */
-    addComment(comment/* { datetime: string, comment: string, top: number } */) {
+    addComment(comment/* { datetime: string, comment: string, top: number, color: string } */) {
       this.comments.push(comment)
 
       /* create element */
@@ -86,6 +94,8 @@ export default {
       element.className = 'comment'
       element.appendChild(text)
       element.style.top = `${comment.top}%`
+      element.style.color = comment.color
+      element.style.webkitTextStrokeColor = this.$store.state.bgColor
       element.animate([{
         marginLeft: '100%',
         widh: '100%',
@@ -96,6 +106,10 @@ export default {
         element.remove()
       }
 
+      const elements = window.document.getElementsByClassName('comment')
+      if (elements.length > 50) {
+        elements[0].remove()
+      }
       /* add comment to screen */
       const screen = window.document.getElementById("live-screen")
       screen.appendChild(element)
@@ -175,7 +189,6 @@ export default {
   font-size: 6em;
   font-weight: bold;
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: white;
 }
 .connection-error {
   position: absolute;

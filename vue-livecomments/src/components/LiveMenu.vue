@@ -10,8 +10,8 @@
         <b-modal
           id="modal-qr"
           class="text-center"
-          @show="onFocusQR"
-          @hide="onBlurQR"
+          @show="onShowModal"
+          @hide="onHideModal"
           centered
           hide-header
           hide-footer>
@@ -25,9 +25,32 @@
       <b-col class="text-right">
         <b-button
           variant="outline-light"
-          disabled>
+          v-b-modal.modal-comments>
           <font-awesome-icon icon="list"></font-awesome-icon>
         </b-button>
+        <b-modal
+          id="modal-comments"
+          class="text-left"
+          title="Comments History"
+          size="lg"
+          scrollable
+          @show="onShowModal"
+          @hide="onHideModal">
+          <b-table
+            striped
+            hover
+            :fields="commentFields"
+            :items="comments"></b-table>
+          <div
+            class="text-right"
+            slot="modal-footer">
+            <b-button
+              variant="outline-secondary"
+              @click="onOutputCSV">
+              Output CSV
+            </b-button>
+          </div>
+        </b-modal>
       </b-col>
     </b-row>
 
@@ -41,9 +64,18 @@
       <b-col>
         <b-button
           variant="outline-light"
-          disabled>
+          v-b-modal.modal-settings>
             <font-awesome-icon icon="cog"></font-awesome-icon>
         </b-button>
+        <b-modal
+          id="modal-settings"
+          title="Settings"
+          centered
+          hide-footer
+          @show="onShowModal"
+          @hide="onHideModal">
+          <live-settings></live-settings>
+        </b-modal>
       </b-col>
     </b-row>
   </b-container>
@@ -52,26 +84,46 @@
 <script>
 import QrcodeVue from 'qrcode.vue'
 import TimerController from '@/components/TimerController.vue'
+import LiveSettings from '@/components/LiveSettings.vue'
 
 export default {
   components: {
     QrcodeVue,
     TimerController,
+    LiveSettings,
   },
+  props: [
+    'comments',
+  ],
   data () {
     return {
       autoHide: true,
       qrValue: `https://${window.location.host}/comment/${this.$store.state.livekey || ''}`,
+      commentFields: [
+        { key: 'datetime', sortable: true },
+        { key: 'comment', sortable: false },
+      ],
     }
   },
   methods: {
-    onFocusQR () {
+    onShowModal () {
       this.autoHide = false
       this.$emit('autoHide', this.autoHide)
     },
-    onBlurQR () {
+    onHideModal () {
       this.autoHide = true
       this.$emit('autoHide', this.autoHide)
+    },
+    onOutputCSV () {
+      let csv = 'datetime,comment\n'
+      for (let i in this.comments) {
+        csv += `${this.comments[i].datetime},${this.comments[i].comment.replace(/,/g, '&comma;')}\n`
+      }
+      const element = window.document.createElement('a')
+      element.href = 'data:text/csv;charset=utf-8,'+encodeURI(csv)
+      element.target = '_blank'
+      element.download = 'comments.csv'
+      element.click()
     },
   }
 }

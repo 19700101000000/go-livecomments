@@ -6,6 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     bgColor: 'white',
+    color: 'black',
     timer: {
       time: 5 * 60 * 1000,
       count: 0,
@@ -15,6 +16,9 @@ export default new Vuex.Store({
   },
   mutations: {
     setColor(state, c/*string*/) {
+      state.color = c
+    },
+    setBgColor(state, c/*string*/) {
       state.bgColor = c
     },
     countTimer(state, ms/*number*/) {

@@ -9,6 +9,7 @@
               <b-input-group>
                 <b-form-input
                   v-model="comment"
+                  :style="{color: color}"
                   type="text"
                   :state="commentState"
                   :disabled="isDisabled"
@@ -33,6 +34,20 @@
               </b-form-text>
             </b-form>
           </b-card-text>
+
+          <b-card-sub-title>Text Color</b-card-sub-title>
+          <b-card-text>
+            <b-form>
+              <b-form-radio-group v-model="color">
+                <b-form-radio
+                  v-for="(color, index) in colors"
+                  :key="index"
+                  :value="color.value"
+                  :style="{color: color.value}">{{ color.text }}</b-form-radio>
+              </b-form-radio-group>
+            </b-form>
+          </b-card-text>
+
           <b-card-sub-title>Shortcuts</b-card-sub-title>
           <b-card-text>
             <b-button
@@ -74,6 +89,16 @@ export default {
   data () {
     return {
       comment: '',
+      color: 'inherit',
+      colors: [
+        { value: 'inherit', text: 'Default'},
+        { value: 'red',     text: 'Red'},
+        { value: 'yellow',  text: 'Yellow'},
+        { value: 'green',   text: 'Green'},
+        { value: 'cyan',    text: 'Cyan'},
+        { value: 'blue',    text: 'Blue'},
+        { value: 'magenta', text: 'Magenta'},
+      ],
       commentLimit: 50,
       isDisabled: false,
       isSending: false,
@@ -114,6 +139,7 @@ export default {
     sendMsg(msg) {
       this.socket.send(JSON.stringify({
         comment: msg,
+        color: this.color,
       }))
     },
     connectionWS() {
