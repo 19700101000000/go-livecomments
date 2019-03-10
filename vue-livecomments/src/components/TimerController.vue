@@ -26,9 +26,23 @@
       <b-col sm="2" class="text-right">
         <b-button
           variant="outline-light"
-          disabled>
+          v-b-modal.modal-timer>
           <font-awesome-icon icon="cog"></font-awesome-icon>
         </b-button>
+        <b-modal
+          id="modal-timer"
+          class="text-body text-left"
+          title="Timer Settings"
+          centered
+          hide-footer
+          @show="$emit('show')"
+          @hide="$emit('hide')">
+          <b-form-checkbox
+            v-model="hasSound"
+            switch>
+            Sound
+          </b-form-checkbox>
+        </b-modal>
       </b-col>
     </b-row>
   </b-card>

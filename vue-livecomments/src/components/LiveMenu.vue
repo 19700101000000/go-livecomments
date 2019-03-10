@@ -56,7 +56,9 @@
 
     <b-row class="h-50 align-items-center">
       <b-col sm="6" class="mx-auto text-light">
-        <timer-controller></timer-controller>
+        <timer-controller
+          @show="onShowModal"
+          @hide="onHideModal"></timer-controller>
       </b-col>
     </b-row>
 
