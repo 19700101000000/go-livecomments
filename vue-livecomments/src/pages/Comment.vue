@@ -1,50 +1,67 @@
 <template>
-  <b-container class="h-100">
-    <b-row class="align-items-end h-50">
-      <b-col class="mx-auto pb-3">
+  <b-container>
+    <b-row class="mt-3">
+      <b-col>
         <b-card
           title="Comment Form">
           <b-card-text>
-            <b-form-input
-              v-model="comment"
-              type="text"
-              :state="commentState"
-              :disabled="isDisabled"
-              placeholder="your comment"></b-form-input>
-            <b-form-text class="text-right">
-              {{ comment.length }}/{{ commentLimit }}
-            </b-form-text>
+            <b-form @submit="onSubmit">
+              <b-input-group>
+                <b-form-input
+                  v-model="comment"
+                  type="text"
+                  :state="commentState"
+                  :disabled="isDisabled"
+                  placeholder="your comment"></b-form-input>
+                <b-input-group-append>
+                  <b-button
+                    type="submit"
+                    :variant="commentState? 'outline-success': 'outline-danger'"
+                    :disabled="!commentState || isDisabled">
+                    <b-spinner
+                      small
+                      variant="success"
+                      v-if="isSending"></b-spinner>
+                    <font-awesome-icon
+                      icon="paper-plane"
+                      v-else></font-awesome-icon>
+                  </b-button>
+                </b-input-group-append>
+              </b-input-group>
+              <b-form-text class="text-right">
+                {{ comment.length }}/{{ commentLimit }}
+              </b-form-text>
+            </b-form>
           </b-card-text>
-          <b-row>
-            <b-col>
-              <b-spinner
-                small
-                variant="primary"
-                v-if="isSending"></b-spinner>
-            </b-col>
-            <b-col class="text-right">
-              <b-button
-                class="ml-2"
-                variant="outline-primary"
-                :disabled="!commentState || isDisabled"
-                @click="onClickSend">
-                Send
-              </b-button>
-            </b-col>
-          </b-row>
+          <b-card-sub-title>Shortcuts</b-card-sub-title>
+          <b-card-text>
+            <b-button
+              class="m-2"
+              variant="outline-success"
+              size="sm"
+              :disabled="false"
+              @click="onClickShortcut">いいね</b-button>
+            <b-button
+              class="m-2"
+              variant="outline-success"
+              size="sm"
+              :disabled="false"
+              @click="onClickShortcut">気になる</b-button>
+            <b-button
+              class="m-2"
+              variant="outline-success"
+              size="sm"
+              :disabled="false"
+              @click="onClickShortcut">すこ</b-button>
+          </b-card-text>
         </b-card>
-      </b-col>
 
-    </b-row>
-    <b-row class="h-50">
-      <b-col>
-          <b-alert
-            :show="isError"
-            variant="danger"
-            dismissible
-            @dismissed="isError=false">
-            Connection failed.
-          </b-alert>
+        <b-alert
+          class="mt-3"
+          :show="isError"
+          variant="danger">
+          Connection fail.
+        </b-alert>
       </b-col>
     </b-row>
   </b-container>
@@ -61,7 +78,13 @@ export default {
       isDisabled: false,
       isSending: false,
       isError: false,
-      socket: new w3cwebsocket(`ws://${window.location.host}/ws/${this.$route.params.id}`)
+      socket: null,
+      eventTimeout: {
+        reopen: null,
+      },
+      eventInterval: {
+        sendPing: null,
+      },
     }
   },
   computed: {
@@ -70,25 +93,60 @@ export default {
     },
   },
   methods: {
-    onClickSend() {
+    onSubmit(e) {
+      e.preventDefault()
       this.isDisabled = true
       this.isSending = true
-      this.socket.send(this.comment)
       window.setTimeout(() => {
         this.isDisabled = false
         this.isSending = false
-        // this.isError = true
         this.comment = ''
       }, 1000)
+      this.sendMsg(this.comment)
+    },
+    onClickShortcut(e) {
+      e.target.disabled = true
+      window.setTimeout(() => {
+        e.target.disabled = false
+      }, 1000)
+      this.sendMsg(e.target.textContent)
+    },
+    sendMsg(msg) {
+      this.socket.send(JSON.stringify({
+        comment: msg,
+      }))
+    },
+    connectionWS() {
+      this.socket = new w3cwebsocket(`ws://${window.location.host}/ws/${this.$route.params.id}`)
+      this.socket.onopen = (e) => {
+        window.console.log('websocket open')
+        window.console.log(e)
+
+        this.isError = false
+      },
+      this.socket.onerror = (e) => {
+        window.console.log('websocket error')
+        window.console.log(e)
+      }
+      this.socket.onclose = (e) => {
+        window.console.log('websocket close')
+        window.console.log(e)
+
+        this.isError = true
+        this.eventTimeout.reopen = window.setTimeout(() => {
+          this.connectionWS()
+        }, 1000)
+      }
     }
   },
   created() {
-    this.socket.onerror = () => {
-      window.console.log('websocket error')
-    }
-    this.socket.onclose = () => {
-      window.console.log('websocket close')
-    }
+    this.connectionWS()
+  },
+  mounted () {
+  },
+  destroyed () {
+    this.socket.close()
+    window.clearTimeout(this.eventTimeout.reopen)
   },
 }
 </script>

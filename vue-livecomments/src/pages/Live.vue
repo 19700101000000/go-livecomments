@@ -4,23 +4,25 @@
     class="h-100"
     :style="styles.liveScreen"
     @mousemove="onMouseMove">
-    <b-container class="h-100">
+    <b-container class="h-100" style="position: relative;">
       <b-row class="h-100 align-items-center">
         <b-col class="text-center mx-auto">
           <timer class="display-1"></timer>
         </b-col>
       </b-row>
-      <b-row class="h-100 mt-0 align-items-center">
-        <b-col class="text-center mx-auto">
-          <b-alert variant="danger" show>
-            Fail Connection
+
+      <b-row class="connection-error w-100">
+        <b-col class="mt-3">
+          <b-alert
+            variant="danger"
+            :show="isError">
+            Connection Fail.
           </b-alert>
         </b-col>
       </b-row>
     </b-container>
     <live-menu
       :style="styles.liveScreenMenu"
-      @clickDummyComment="onClickDummyComment"
       @autoHide="onChangeMenuAutoHide"></live-menu>
   </div>
 </template>
@@ -41,9 +43,14 @@ export default {
         datetime: 'yyyy-MM-dd HH:mm:ss',
         comment: 'this is comment',
       } */],
+      isError: false,
       menuAutoHide: true,
       eventTimeout: {
         hideMenu: null,
+        reopen: null,
+      },
+      eventInterval: {
+        sendPing: null,
       },
       styles: {
         liveScreen: {
@@ -56,7 +63,7 @@ export default {
           top: '0',
         }
       },
-      socket: new w3cwebsocket(`ws://${window.location.host}/ws/${this.$store.state.livekey}`),
+      socket: null,
     }
   },
   methods: {
@@ -69,23 +76,16 @@ export default {
       }
     },
 
-    /* Debug */
-    onClickDummyComment () {
-      this.addComment({comment: 'Dummy Comment'})
-      // this.socket.send('Dummy Comment')
-    },
-
     /* Show Comment */
-    addComment(comment/* { datetime: string, comment: string } */) {
+    addComment(comment/* { datetime: string, comment: string, top: number } */) {
       this.comments.push(comment)
-      const time = new Date().getTime()
 
       /* create element */
       const text = window.document.createTextNode(comment.comment)
       const element = window.document.createElement('p')
       element.className = 'comment'
       element.appendChild(text)
-      element.style.top = `${time % 80}%`
+      element.style.top = `${comment.top}%`
       element.animate([{
         marginLeft: '100%',
         widh: '100%',
@@ -114,20 +114,52 @@ export default {
     clearTimeout() {
       window.clearTimeout(this.eventTimeout.hideMenu)
     },
+    connectionWS() {
+      this.socket = new w3cwebsocket(`ws://${window.location.host}/ws/${this.$store.state.livekey}`)
+      this.socket.onmessage = (e) => {
+        if (e.data === "ping") {
+          return
+        }
+        this.addComment(JSON.parse(e.data))
+      }
+      this.socket.onopen = (e) => {
+        window.console.log('websocket open')
+        window.console.log(e)
+
+        this.isError = false
+      }
+      this.socket.onerror = (e) => {
+        window.console.log('websocket error')
+        window.console.log(e)
+      }
+      this.socket.onclose = (e) => {
+        window.console.log('websocket close')
+        window.console.log(e)
+
+        this.isError = true
+        this.eventTimeout.reopen = window.setTimeout(() => {
+          this.connectionWS()
+        }, 1000)
+      }
+
+      // TODO: is unnecessary?
+      this.eventInterval.sendPing = window.setInterval(() => {
+        this.socket.send('ping')
+      }, 60000)
+    },
+  },
+  beforeCreate () {
+    if (this.$store.state.livekey === null) {
+      this.$router.push({ path: '/' })
+    }
   },
   created () {
-    this.socket.onmessage = (e) => {
-      this.addComment(JSON.parse(e.data))
-    }
-    this.socket.onerror = () => {
-      window.console.log('websocket error')
-    }
-    this.socket.onclose = () => {
-      window.console.log('websocket close')
-    }
+    this.connectionWS()
   },
   destroyed () {
     this.socket.close()
+    window.clearTimeout(this.eventTimeout.reopen)
+    window.clearInterval(this.eventInterval.sendPing)
   }
 }
 </script>
@@ -142,7 +174,11 @@ export default {
   position: absolute;
   font-size: 6em;
   font-weight: bold;
-  -webkit-text-stroke-width: 4px;
+  -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: white;
+}
+.connection-error {
+  position: absolute;
+  top: 0;
 }
 </style>

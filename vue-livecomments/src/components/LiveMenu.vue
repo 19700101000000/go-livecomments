@@ -45,14 +45,6 @@
             <font-awesome-icon icon="cog"></font-awesome-icon>
         </b-button>
       </b-col>
-
-      <b-col class="mx-auto text-right">
-        <b-button
-          variant="danger"
-          @click="onClickDummyComment">
-          Dummy Comment
-        </b-button>
-      </b-col>
     </b-row>
   </b-container>
 </template>
@@ -69,13 +61,10 @@ export default {
   data () {
     return {
       autoHide: true,
-      qrValue: `http://${window.location.host}/comment/${this.$store.state.livekey || ''}`,
+      qrValue: `https://${window.location.host}/comment/${this.$store.state.livekey || ''}`,
     }
   },
   methods: {
-    onClickDummyComment () {
-      this.$emit('clickDummyComment')
-    },
     onFocusQR () {
       this.autoHide = false
       this.$emit('autoHide', this.autoHide)

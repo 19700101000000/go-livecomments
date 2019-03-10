@@ -10,25 +10,41 @@ import (
 
 var m *melody.Melody
 
-type StructMsg struct {
+type ResMsg struct {
 	Message string `json:"comment"`
 	Date    string `json:"datetime"`
+	Top     int64  `json:"top"`
+}
+type ReqMsg struct {
+	Message string `json:"comment"`
 }
 
 /* init Websocket Settings */
 func InitWS() {
 	m = melody.New()
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
-		message := StructMsg{
-			Message: string(msg),
-			Date:    time.Now().Format("2006-01-02 15:04:05"),
+		if string(msg) == "ping" {
+			s.Write([]byte("ping"))
+			return
+		}
+
+		req := ReqMsg{}
+		err := json.Unmarshal(msg, &req)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		now := time.Now()
+		message := ResMsg{
+			Message: req.Message,
+			Date:    now.Format("2006-01-02 15:04:05"),
+			Top:     now.UnixNano() % 80,
 		}
 		json, err := json.Marshal(&message)
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(string(json))
-
 		m.BroadcastFilter(json, func(q *melody.Session) bool {
 			return q.Request.URL.Path == s.Request.URL.Path
 		})

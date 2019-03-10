@@ -15,24 +15,20 @@ export default {
 
       const second = 1000
       const minute = 60 * second
-      const hour   = 60 * minute
 
-      const hours   = Math.floor(remaining / hour)
-      const minutes = Math.floor(remaining % hour / minute)
+      const minutes = Math.floor(remaining / minute)
       const seconds = Math.floor(remaining % minute / second)
-      return `${`0${hours}`.slice(-2)}:${`0${minutes}`.slice(-2)}:${`0${seconds}`.slice(-2)}`
+      return `${`0${minutes}`.slice(-2)}:${`0${seconds}`.slice(-2)}`
     },
     count () {
       const count = this.$store.state.timer.count
 
       const second = 1000
       const minute = 60 * second
-      const hour   = 60 * minute
 
-      const hours   = Math.floor(count / hour)
-      const minutes = Math.floor(count % hour / minute)
+      const minutes = Math.floor(count / minute)
       const seconds = Math.floor(count % minute / second)
-      return `${`0${hours}`.slice(-2)}:${`0${minutes}`.slice(-2)}:${`0${seconds}`.slice(-2)}`
+      return `${`0${minutes}`.slice(-2)}:${`0${seconds}`.slice(-2)}`
     }
   }
 }
