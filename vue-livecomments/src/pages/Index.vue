@@ -14,12 +14,19 @@
           </b-alert>
           <b-button
             variant="outline-primary"
-            size="sm"
             @click="onClickNew"
             :disabled="isDisabled">
             <b-spinner small v-if="isDisabled"></b-spinner>
-            New Live
+            Start a New Live
           </b-button>
+          <hr>
+          <b-card-text class="text-secondary">
+            Please use it on a PC.
+            <br>
+            Supported environments: The latest Chrome and Firefox.
+            <br>
+            More then 800x600px.
+          </b-card-text>
         </b-card>
       </b-col>
     </b-row>
