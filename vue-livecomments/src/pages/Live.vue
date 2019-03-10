@@ -86,6 +86,7 @@ export default {
 
     /* Show Comment */
     addComment(comment/* { datetime: string, comment: string, top: number, color: string } */) {
+      comment.datetime = new Date(comment.datetime).toLocaleString()
       this.comments.push(comment)
 
       /* create element */

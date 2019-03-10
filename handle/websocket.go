@@ -36,11 +36,14 @@ func InitWS() {
 			fmt.Println(err)
 			return
 		}
+		if len(req.Message) == 0 {
+			return
+		}
 
-		now := time.Now()
+		now := time.Now().UTC()
 		message := ResMsg{
 			Message: req.Message,
-			Date:    now.Format("2006-01-02 15:04:05"),
+			Date:    now.Format("2006-01-02 15:04:05 UTC"),
 			Top:     now.UnixNano() % 80,
 			Color:   req.Color,
 		}
