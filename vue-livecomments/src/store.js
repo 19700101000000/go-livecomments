@@ -21,6 +21,9 @@ export default new Vuex.Store({
     setBgColor(state, c/*string*/) {
       state.bgColor = c
     },
+    setTime(state, t/*number*/) {
+      state.timer.time = t
+    },
     countTimer(state, ms/*number*/) {
       state.timer.count += ms
       if (state.timer.count >= state.timer.time) {

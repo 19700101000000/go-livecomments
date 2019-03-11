@@ -144,19 +144,16 @@ export default {
     },
     connectionWS() {
       this.socket = new w3cwebsocket(`ws://${window.location.host}/ws/${this.$route.params.id}`)
-      this.socket.onopen = (e) => {
+      this.socket.onopen = () => {
         window.console.log('websocket open')
-        window.console.log(e)
 
         this.isError = false
       },
-      this.socket.onerror = (e) => {
+      this.socket.onerror = () => {
         window.console.log('websocket error')
-        window.console.log(e)
       }
-      this.socket.onclose = (e) => {
+      this.socket.onclose = () => {
         window.console.log('websocket close')
-        window.console.log(e)
 
         this.isError = true
         this.eventTimeout.reopen = window.setTimeout(() => {
