@@ -25,7 +25,7 @@
             <br>
             Supported environments: The latest Chrome and Firefox.
             <br>
-            More then 800x600px.
+            More than 800x600px.
           </b-card-text>
           <b-card-text class="text-secondary">
             Bata Version.
