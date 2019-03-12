@@ -2,6 +2,12 @@
   <b-container>
     <b-row class="mt-3">
       <b-col>
+        <b-alert
+          :show="isError"
+          variant="danger">
+          Connection fail.
+        </b-alert>
+
         <b-card
           title="Comment Form">
           <b-card-text>
@@ -43,40 +49,33 @@
                   v-for="(color, index) in colors"
                   :key="index"
                   :value="color.value"
-                  :style="{color: color.value}">{{ color.text }}</b-form-radio>
+                  :style="{color: color.value}">
+                  <font-awesome-icon icon="circle"></font-awesome-icon>
+                </b-form-radio>
               </b-form-radio-group>
             </b-form>
           </b-card-text>
 
           <b-card-sub-title>Shortcuts</b-card-sub-title>
-          <b-card-text>
-            <b-button
-              class="m-2"
-              variant="outline-success"
-              size="sm"
-              :disabled="false"
-              @click="onClickShortcut">いいね</b-button>
-            <b-button
-              class="m-2"
-              variant="outline-success"
-              size="sm"
-              :disabled="false"
-              @click="onClickShortcut">気になる</b-button>
-            <b-button
-              class="m-2"
-              variant="outline-success"
-              size="sm"
-              :disabled="false"
-              @click="onClickShortcut">すこ</b-button>
-          </b-card-text>
+          <b-tabs
+            small>
+            <b-tab
+              v-for="(shortcut, index) in shortcuts"
+              :key="index"
+              :title="shortcut.title">
+              <b-button
+                v-for="(text, index) in shortcut.texts"
+                :key="index"
+                class="m-2"
+                variant="outline-success"
+                size="sm"
+                :disabled="false"
+                @click="onClickShortcut">
+                {{ text }}
+              </b-button>
+            </b-tab>
+          </b-tabs>
         </b-card>
-
-        <b-alert
-          class="mt-3"
-          :show="isError"
-          variant="danger">
-          Connection fail.
-        </b-alert>
       </b-col>
     </b-row>
   </b-container>
@@ -91,13 +90,33 @@ export default {
       comment: '',
       color: 'inherit',
       colors: [
-        { value: 'inherit', text: 'Default'},
-        { value: 'red',     text: 'Red'},
-        { value: 'yellow',  text: 'Yellow'},
-        { value: 'green',   text: 'Green'},
-        { value: 'cyan',    text: 'Cyan'},
-        { value: 'blue',    text: 'Blue'},
-        { value: 'magenta', text: 'Magenta'},
+        { value: 'inherit'},
+        { value: 'deeppink'},
+        { value: 'orangered'},
+        { value: 'darkorange'},
+        { value: 'lime'},
+        { value: 'forestgreen'},
+        { value: 'aqua'},
+        { value: 'darkblue'},
+      ],
+      shortcuts: [
+        {
+          title: 'en.',
+          texts: [
+            'lol',
+            'GJ',
+            'fav',
+          ],
+        },
+        {
+          title: 'ja.',
+          texts: [
+            'いいね',
+            'きになる',
+            'すこ',
+            'でぃすこ',
+          ],
+        },
       ],
       commentLimit: 50,
       isDisabled: false,
