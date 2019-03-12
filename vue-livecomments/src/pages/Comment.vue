@@ -43,7 +43,7 @@
 
           <b-card-sub-title>Text Color</b-card-sub-title>
           <b-card-text>
-            <b-form>
+            <b-form action="#">
               <b-form-radio-group v-model="color">
                 <b-form-radio
                   v-for="(color, index) in colors"

@@ -3,6 +3,7 @@ copyHTML:
 	cp ./vue-livecomments/dist/css/* ./assets/css/
 	cp ./vue-livecomments/dist/js/* ./assets/js/
 removeAssets:
+	rm ./templates/*
 	rm ./assets/js/*
 	rm ./assets/css/*
 buildToStart:
