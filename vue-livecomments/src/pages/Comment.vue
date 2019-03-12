@@ -49,7 +49,7 @@
                 :key="index"
                 :value="color.value"
                 :style="{color: color.value}">
-                <font-awesome-icon icon="circle"></font-awesome-icon>
+                Text
               </b-form-radio>
             </b-form-radio-group>
           </b-card-text>
@@ -93,7 +93,7 @@ export default {
         { value: 'lime'},
         { value: 'forestgreen'},
         { value: 'aqua'},
-        { value: 'darkblue'},
+        { value: 'royalblue'},
       ],
       shortcuts: [
         {
@@ -102,6 +102,7 @@ export default {
             'lol',
             'GJ',
             'fav',
+            'like',
           ],
         },
         {
