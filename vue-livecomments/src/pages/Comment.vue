@@ -135,6 +135,9 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault()
+      if (!this.isDisabled) {
+        return
+      }
       this.isDisabled = true
       this.isSending = true
       window.setTimeout(() => {
