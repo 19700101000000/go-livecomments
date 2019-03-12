@@ -11,7 +11,7 @@
         <b-card
           title="Comment Form">
           <b-card-text>
-            <b-form @submit="onSubmit">
+            <b-form action="#" @submit="onSubmit">
               <b-input-group>
                 <b-form-input
                   v-model="comment"
@@ -43,17 +43,15 @@
 
           <b-card-sub-title>Text Color</b-card-sub-title>
           <b-card-text>
-            <b-form action="#">
-              <b-form-radio-group v-model="color">
-                <b-form-radio
-                  v-for="(color, index) in colors"
-                  :key="index"
-                  :value="color.value"
-                  :style="{color: color.value}">
-                  <font-awesome-icon icon="circle"></font-awesome-icon>
-                </b-form-radio>
-              </b-form-radio-group>
-            </b-form>
+            <b-form-radio-group v-model="color">
+              <b-form-radio
+                v-for="(color, index) in colors"
+                :key="index"
+                :value="color.value"
+                :style="{color: color.value}">
+                <font-awesome-icon icon="circle"></font-awesome-icon>
+              </b-form-radio>
+            </b-form-radio-group>
           </b-card-text>
 
           <b-card-sub-title>Shortcuts</b-card-sub-title>
