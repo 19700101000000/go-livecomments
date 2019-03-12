@@ -135,7 +135,7 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault()
-      if (!this.isDisabled) {
+      if (this.isDisabled) {
         return
       }
       this.isDisabled = true
