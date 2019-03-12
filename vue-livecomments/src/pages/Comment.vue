@@ -136,7 +136,7 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault()
-      if (this.isDisabled) {
+      if (this.isDisabled || this.comment.length === 0 || this.comment.length > this.commentLimit) {
         return
       }
       this.isDisabled = true
