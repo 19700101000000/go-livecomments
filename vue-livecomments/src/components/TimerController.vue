@@ -45,6 +45,7 @@
               v-model="time"
               buttons
               button-variant="outline-dark">
+              <b-form-radio :value="10 * 60 * 1000">10:00</b-form-radio>
               <b-form-radio :value="7 * 60 * 1000">07:00</b-form-radio>
               <b-form-radio :value="5 * 60 * 1000">05:00</b-form-radio>
               <b-form-radio :value="3 * 60 * 1000">03:00</b-form-radio>
@@ -131,10 +132,12 @@ export default {
     onChangeSoundTimeUP(e) {
       if (e.target.files.length === 0) {
         this.onChooseAlert(e)
+        return
       }
       const file = e.target.files[0]
       if (!/^audio/.test(file.type)) {
         this.onChooseAlert(e)
+        return
       }
       const reader = new FileReader()
       reader.onload = (e) => {
@@ -151,10 +154,12 @@ export default {
     onChangeSoundOneMinute(e) {
       if (e.target.files.length === 0) {
         this.onChooseAlert(e)
+        return
       }
       const file = e.target.files[0]
       if (!/^audio/.test(file.type)) {
         this.onChooseAlert(e)
+        return
       }
       const reader = new FileReader()
       reader.onload = (e) => {
