@@ -70,9 +70,7 @@
                 variant="outline-success"
                 size="sm"
                 :disabled="false"
-                @click="onClickShortcut">
-                {{ text }}
-              </b-button>
+                @click="onClickShortcut">{{ text }}</b-button>
             </b-tab>
           </b-tabs>
         </b-card>
