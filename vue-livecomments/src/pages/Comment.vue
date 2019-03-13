@@ -139,9 +139,6 @@ export default {
       eventTimeout: {
         reopen: null,
       },
-      eventInterval: {
-        sendPing: null,
-      },
     }
   },
   computed: {
@@ -161,14 +158,14 @@ export default {
         this.isDisabled = false
         this.isSending = false
         this.comment = ''
-      }, 1000)
+      }, 800)
       this.sendMsg(this.comment)
     },
     onClickShortcut(e) {
       this.isDisabled = true
       window.setTimeout(() => {
       this.isDisabled = false
-      }, 1000)
+      }, 800)
       this.sendMsg(e.target.textContent)
     },
     sendMsg(msg) {
