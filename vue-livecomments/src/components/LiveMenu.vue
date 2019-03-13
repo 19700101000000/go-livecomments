@@ -10,15 +10,23 @@
         <b-modal
           id="modal-qr"
           class="text-center"
+          title="Comment Form"
           @show="onShowModal"
           @hide="onHideModal"
-          centered
-          hide-header
-          hide-footer>
+          centered>
           <qrcode-vue
-            class="m-4"
+            class="p-4"
             :value="qrValue"
             :size="400"></qrcode-vue>
+          <div
+            slot="modal-footer">
+            <b-link
+              target="_blank"
+              :href="qrValue">
+              Comment Form
+              <font-awesome-icon icon="external-link-alt"></font-awesome-icon>
+            </b-link>
+          </div>
         </b-modal>
       </b-col>
 
