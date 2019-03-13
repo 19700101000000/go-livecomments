@@ -41,8 +41,8 @@
             </b-form>
           </b-card-text>
 
-          <b-card-sub-title>Text Color</b-card-sub-title>
           <b-card-text>
+            <b-card-sub-title>Text Color</b-card-sub-title>
             <b-form-radio-group v-model="color">
               <b-form-radio
                 v-for="(color, index) in colors"
@@ -54,23 +54,25 @@
             </b-form-radio-group>
           </b-card-text>
 
-          <b-card-sub-title>Shortcuts</b-card-sub-title>
-          <b-tabs
-            small>
-            <b-tab
-              v-for="(shortcut, index) in shortcuts"
-              :key="index"
-              :title="shortcut.title">
-              <b-button
-                v-for="(text, index) in shortcut.texts"
+          <b-card-text>
+            <b-card-sub-title>Shortcuts</b-card-sub-title>
+            <b-tabs
+              small>
+              <b-tab
+                v-for="(shortcut, index) in shortcuts"
                 :key="index"
-                class="m-2"
-                variant="outline-success"
-                size="sm"
-                :disabled="false"
-                @click="onClickShortcut">{{ text }}</b-button>
-            </b-tab>
-          </b-tabs>
+                :title="shortcut.title">
+                <b-button
+                  v-for="(text, index) in shortcut.texts"
+                  :key="index"
+                  class="m-2"
+                  variant="outline-success"
+                  size="sm"
+                  :disabled="isDisabled"
+                  @click="onClickShortcut">{{ text }}</b-button>
+              </b-tab>
+            </b-tabs>
+          </b-card-text>
         </b-card>
       </b-col>
     </b-row>
@@ -103,15 +105,29 @@ export default {
             'GJ',
             'fav',
             'like',
+            '10',
+            '9',
+            '8',
+            '7',
+            '6',
+            '5',
+            '4',
+            '3',
+            '2',
+            '1',
+            '0',
           ],
         },
         {
           title: 'ja.',
           texts: [
             'いいね',
-            'きになる',
+            '期待',
+            '初見',
             'すこ',
-            'でぃすこ',
+            'うぇーい',
+            '8888888888',
+            'ナイスよかったい',
           ],
         },
       ],
@@ -149,9 +165,9 @@ export default {
       this.sendMsg(this.comment)
     },
     onClickShortcut(e) {
-      e.target.disabled = true
+      this.isDisabled = true
       window.setTimeout(() => {
-        e.target.disabled = false
+      this.isDisabled = false
       }, 1000)
       this.sendMsg(e.target.textContent)
     },
