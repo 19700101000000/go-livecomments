@@ -11,5 +11,11 @@ buildToStart:
 	make copyTemplates
 	go run main.go
 
-initNpm:
-	cd ./vue-livecomments/ && npm install && npm run build
+init:
+	mkdir templates
+	mkdir assets
+	mkdir assets/css
+	mkdir assets/js
+	cp live/key.go.tmp live/key.go
+	cd ./vue-livecomments/ && npm install
+
