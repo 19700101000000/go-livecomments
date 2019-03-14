@@ -24,38 +24,40 @@ type ReqMsg struct {
 /* init Websocket Settings */
 func InitWS() {
 	m = melody.New()
-	m.HandleMessage(func(s *melody.Session, msg []byte) {
-		if string(msg) == "ping" {
-			s.Write([]byte("ping"))
-			return
-		}
+	m.HandleMessage(wsHandle)
+}
 
-		req := ReqMsg{}
-		err := json.Unmarshal(msg, &req)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		if len(req.Message) == 0 {
-			return
-		}
+/* merody; websocket handle */
+func wsHandle(s *melody.Session, msg []byte) {
+	if string(msg) == "ping" {
+		s.Write([]byte("ping"))
+		return
+	}
 
-		now := time.Now().UTC()
-		message := ResMsg{
-			Message: req.Message,
-			Date:    now.Format("2006-01-02 15:04:05 UTC"),
-			Top:     now.UnixNano() % 80,
-			Color:   req.Color,
-		}
-		json, err := json.Marshal(&message)
-		if err != nil {
-			fmt.Println(err)
-		}
-		m.BroadcastFilter(json, func(q *melody.Session) bool {
-			return q.Request.URL.Path == s.Request.URL.Path
-		})
+	req := ReqMsg{}
+	err := json.Unmarshal(msg, &req)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if len(req.Message) == 0 {
+		return
+	}
+
+	now := time.Now().UTC()
+	message := ResMsg{
+		Message: req.Message,
+		Date:    now.Format("2006-01-02 15:04:05 UTC"),
+		Top:     now.UnixNano() % 80,
+		Color:   req.Color,
+	}
+	json, err := json.Marshal(&message)
+	if err != nil {
+		fmt.Println(err)
+	}
+	m.BroadcastFilter(json, func(q *melody.Session) bool {
+		return q.Request.URL.Path == s.Request.URL.Path
 	})
-
 }
 
 func WS(c *gin.Context) {
