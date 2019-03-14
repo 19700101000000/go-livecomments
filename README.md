@@ -8,6 +8,6 @@ At first, please try it
 ## Build and try
 ```shell
 make init
-go run main.go
+make buildToStart
 ```
 This project uses Golang and Vue.js!
