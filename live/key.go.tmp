@@ -1,0 +1,8 @@
+package live
+
+func getKey() string {
+	// TODO change key.
+	key := "newLive"
+
+	return key
+}
